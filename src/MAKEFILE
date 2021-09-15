@@ -1,0 +1,47 @@
+obj = instruct/apogee.obj lib/file.obj lib/text.obj lib/output.obj lib/input.obj lib/exeparse.obj lib/unlzexe.obj lib/bstream.obj lib/memory.obj lib/error.obj
+
+CC = wcc
+CFLAGS = -1 -za99 -d0 -oxs -zq
+LD = wlink
+
+all: raptor.exe hp.exe textview.exe
+
+pre-build: .symbolic
+    cd lib
+    wmake all
+    cd ..
+    cd instruct
+    wmake all
+    cd ..
+
+bmenace.exe: pre-build bmenace.obj $(obj)
+    *$(LD) name $@ file { bmenace.obj $(obj) } option { ELIMINATE }
+
+keen.exe: pre-build keen.obj $(obj)
+    *$(LD) name $@ file { keen.obj $(obj) instruct/idsoft.obj instruct/psa.obj } option { ELIMINATE }
+
+keengg.exe: pre-build keengg.obj $(obj)
+    *$(LD) name $@ file { keengg.obj $(obj) instruct/idsoft.obj } option { ELIMINATE }
+
+# raptor.exe: pre-build raptor.obj $(obj)
+#     *$(LD) name $@ file { raptor.obj $(obj) }
+
+# hp.exe: pre-build hocus.obj $(obj)
+#     *$(LD) name $@ file { hocus.obj $(obj) }
+
+textview.exe: pre-build textview.obj $(obj)
+    *$(LD) name $@ file { textview.obj lib/file.obj lib/text.obj lib/output.obj lib/input.obj lib/memory.obj }
+
+.c.obj:
+    $(CC) -fo=$@ $(CFLAGS) $<
+
+clean: .symbolic
+    cd lib
+    wmake clean
+    cd ..
+    cd instruct
+    wmake clean
+    cd ..
+    del *.obj
+    del *.exe
+    del *.err

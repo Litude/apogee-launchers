@@ -1,0 +1,6 @@
+.directory 
+/.vscode
+/bak
+*.obj
+*.err
+*.exe
