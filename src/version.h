@@ -1,2 +1,2 @@
-#define LOW_MEMORY
-#define RELEASE
+// #define LOW_MEMORY
+// #define RELEASE

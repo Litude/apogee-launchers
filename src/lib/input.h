@@ -81,3 +81,13 @@ long getTime();
     ASM(int INTERRUPT_DOS) \
     value [cx dx] \
     modify [ah];
+
+void clearInputBuffer();
+#pragma aux clearInputBuffer = \
+    ASM(mov di, 0x0040) \
+    ASM(mov es, di) \
+    ASM(mov di, 0x001A) \
+    ASM(mov word ptr es:[di], 0x20) \
+    ASM(mov di, 0x001C) \
+    ASM(mov word ptr es:[di], 0x20) \
+    modify [es di];

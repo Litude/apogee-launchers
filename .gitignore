@@ -1,6 +1,6 @@
 .directory 
 /.vscode
 /bak
-*.obj
-*.err
-*.exe
+*.OBJ
+*.ERR
+*.EXE

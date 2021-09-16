@@ -23,8 +23,8 @@ keen.exe: pre-build keen.obj $(obj)
 keengg.exe: pre-build keengg.obj $(obj)
     *$(LD) name $@ file { keengg.obj $(obj) instruct/idsoft.obj } option { ELIMINATE }
 
-# raptor.exe: pre-build raptor.obj $(obj)
-#     *$(LD) name $@ file { raptor.obj $(obj) }
+raptor.exe: pre-build raptor.obj $(obj)
+    *$(LD) name $@ file { raptor.obj $(obj) } option { ELIMINATE }
 
 # hp.exe: pre-build hocus.obj $(obj)
 #     *$(LD) name $@ file { hocus.obj $(obj) }
