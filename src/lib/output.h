@@ -60,6 +60,7 @@ void drawHorizontalLine(int y, int color, char character);
 void drawVerticalLine(int x, int color, char character);
 void drawRectangle(int x, int y, int width, int height, int color);
 void drawWindow(int x, int y, int width, int height, int color, WINDOW_BORDER_STYLE style);
+void drawBevelWindow(int x, int y, int width, int height, int primaryColor, int secondaryColor, int backgroundColor, int bevelStyle);
 void drawRawText(int x, int y, const char* string);
 void setRawColorData(int x, int y, const char* string);
 void drawWideHighlightText(int x, int y, int width, int highlightColor, int normalColor, const char* string);

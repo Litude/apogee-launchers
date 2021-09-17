@@ -268,6 +268,61 @@ void drawWindow(int x, int y, int width, int height, int color, WINDOW_BORDER_ST
     drawColorChar(x + width - 1, y + height - 1, color, bottomRight);
 }
 
+void drawBevelWindow(int x, int y, int width, int height, int outerColor, int innerColor, int backgroundColor, int bevelStyle) {
+    char far *video = (char far *)0xb8000000 + 2 * 80 * y + 2 * x;
+    int skip = (80 - width) * 2;
+    for (int i = 0; i < width; ++i) {
+        *video++ = 'Ü';
+        *video++ = outerColor;
+    }
+    video += skip;
+    *video++ = 'Û';
+    *video++ = outerColor;
+    *video++ = 'Û';
+    *video++ = innerColor;
+    for (int i = 2; i < width - 2; ++i) {
+        *video++ = 'ß';
+        *video++ = innerColor|backgroundColor;
+    }
+    *video++ = 'Û';
+    *video++ = innerColor;
+    *video++ = 'Û';
+    *video++ = outerColor;
+    video += skip;
+    for (int i = 2; i < height - 2; ++i) {
+        *video++ = 'Û';
+        *video++ = outerColor;
+        *video++ = 'Û';
+        *video++ = innerColor;
+        for (int j = 2; j < width - 2; ++j) {
+            *video++ = ' ';
+            *video++ = backgroundColor;
+        }
+        *video++ = 'Û';
+        *video++ = innerColor;
+        *video++ = 'Û';
+        *video++ = outerColor;
+        video += skip;
+    }
+    *video++ = 'Û';
+    *video++ = outerColor;
+    *video++ = 'Û';
+    *video++ = innerColor;
+    for (int i = 2; i < width - 2; ++i) {
+        *video++ = 'Ü';
+        *video++ = innerColor|backgroundColor;
+    }
+    *video++ = 'Û';
+    *video++ = innerColor;
+    *video++ = 'Û';
+    *video++ = outerColor;
+    video += skip;
+    for (int i = 0; i < width; ++i) {
+        *video++ = 'ß';
+        *video++ = outerColor;
+    }
+}
+
 void setBlockColor(int x, int y, int color) {
     char far *video = (char far *)0xb8000000 + 2 * 80 * y + 2 * x;
     video++;

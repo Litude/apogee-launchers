@@ -17,6 +17,9 @@ pre-build: .symbolic
 bmenace.exe: pre-build bmenace.obj $(obj)
     *$(LD) name $@ file { bmenace.obj $(obj) } option { ELIMINATE }
 
+darkages.exe: pre-build darkages.obj $(obj)
+    *$(LD) name $@ file { darkages.obj $(obj) } option { ELIMINATE }
+
 keen.exe: pre-build keen.obj $(obj)
     *$(LD) name $@ file { keen.obj $(obj) instruct/idsoft.obj instruct/psa.obj } option { ELIMINATE }
 
