@@ -1,4 +1,4 @@
-obj = instruct/apogee.obj lib/file.obj lib/text.obj lib/output.obj lib/input.obj lib/exeparse.obj lib/unlzexe.obj lib/bstream.obj lib/memory.obj lib/error.obj
+obj = instruct/apogee.obj lib/args.obj lib/file.obj lib/text.obj lib/output.obj lib/input.obj lib/exeparse.obj lib/unlzexe.obj lib/bstream.obj lib/memory.obj lib/error.obj
 
 CC = wcc
 CFLAGS = -1 -za99 -d0 -oxs -zq
@@ -14,6 +14,9 @@ pre-build: .symbolic
     wmake all
     cd ..
 
+keenaamb.exe: pre-build keenaamb.obj $(obj)
+    *$(LD) name $@ file { keenaamb.obj $(obj) instruct/idsoft.obj instruct/psa.obj } option { ELIMINATE }
+
 bmenace.exe: pre-build bmenace.obj $(obj)
     *$(LD) name $@ file { bmenace.obj $(obj) } option { ELIMINATE }
 
@@ -24,7 +27,7 @@ keen.exe: pre-build keen.obj $(obj)
     *$(LD) name $@ file { keen.obj $(obj) instruct/idsoft.obj instruct/psa.obj } option { ELIMINATE }
 
 keengg.exe: pre-build keengg.obj $(obj)
-    *$(LD) name $@ file { keengg.obj $(obj) instruct/idsoft.obj } option { ELIMINATE }
+    *$(LD) name $@ file { keengg.obj $(obj) instruct/idsoft.obj instruct/psa.obj } option { ELIMINATE }
 
 raptor.exe: pre-build raptor.obj $(obj)
     *$(LD) name $@ file { raptor.obj $(obj) } option { ELIMINATE }

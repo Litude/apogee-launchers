@@ -2,7 +2,7 @@ CC = wcc
 CFLAGS = -1 -za99 -d0 -oxs -zq
 LD = wlink
 
-all: file.obj text.obj output.obj input.obj exeparse.obj unlzexe.obj bstream.obj memory.obj error.obj
+all: args.obj file.obj text.obj output.obj input.obj exeparse.obj unlzexe.obj bstream.obj memory.obj error.obj
 
 .c.obj:
     $(CC) -fo=$@ $(CFLAGS) $<

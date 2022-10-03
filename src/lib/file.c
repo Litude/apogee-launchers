@@ -289,3 +289,23 @@ int farfclose(_FFILE* stream) {
     }
     return result;
 }
+
+// int mkdir(const char far* ptr) {
+//     unsigned int charSeg = FP_SEG(ptr);
+//     unsigned int charOff = FP_OFF(ptr);
+//     int result = 0;
+//     _asm {
+//         //push ds
+//         //mov ds, charSeg
+//         mov dx, charOff
+//         mov ah, DOS_DIRECTORY_CREATE
+//         int INTERRUPT_DOS
+//         mov ax, -1
+//         jnc end
+//         xor ax, ax
+//         end:
+//         mov result, ax
+//         //pop ds
+//     }
+//     return result;
+// }

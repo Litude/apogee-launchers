@@ -16,10 +16,12 @@ int farfputc(int c, _FFILE* stream);
 int farfseek(_FFILE* stream, long offset, int whence);
 long farftell(_FFILE* stream);
 int farfclose(_FFILE* stream);
-int rename(const char* old, const char* new);
-#pragma aux rename = \
+
+int farrename(const char far* old, const char far* new);
+#pragma aux farrename = \
     ASM(push ds) \
-    ASM(mov ds, ax) \
+    ASM(mov ds, dx) \
+    ASM(mov dx, ax) \
     ASM(mov ah, DOS_FILE_RENAME) \
     ASM(int INTERRUPT_DOS) \
     ASM(mov ax, 0) \
@@ -28,12 +30,14 @@ int rename(const char* old, const char* new);
     ASM(end:) \
     ASM(pop ds) \
     parm [ax dx] [es di] \
-    value [ax];
+    value [ax] \
+    modify [ax dx];
 
-int mkdir(const char far* path);
-#pragma aux mkdir = \
+int farmkdir(const char far* path);
+#pragma aux farmkdir = \
     ASM(push ds) \
-    ASM(mov ds, ax) \
+    ASM(mov ds, dx) \
+    ASM(mov dx, ax) \
     ASM(mov ah, DOS_DIRECTORY_CREATE) \
     ASM(int INTERRUPT_DOS) \
     ASM(mov ax, -1) \
@@ -42,4 +46,5 @@ int mkdir(const char far* path);
     ASM(end:) \
     ASM(pop ds) \
     parm [ax dx] \
-    value [ax];
+    value [ax] \
+    modify [ax dx];

@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <errno.h>
 #include <process.h>
+#include "lib/args.h"
 #include "lib/output.h"
 #include "lib/input.h"
 #include "lib/file.h"
@@ -19,7 +20,7 @@
 #include "version.h"
 
 extern char **environ;
-static char **args;
+static const char **args;
 
 static const char* APOGEE_SHEET_PREFIX = "GG";
 static const char* APOGEE_GAME_TITLE_OLD = "COMMANDER KEEN: GOODBYE, GALAXY!";
@@ -341,7 +342,7 @@ static void detectGameExeTypes() {
     }
     ep4Enabled = ep4EgaFileName || ep4CgaFileName;
     ep5Enabled = ep5EgaFileName || ep5CgaFileName;
-    cgaAndEgaExists = (ep4EgaFileName || ep5EgaFileName) && (ep4CgaFileName || ep5CgaFileName);
+    cgaAndEgaExists = ((ep4EgaFileName || ep5EgaFileName) && (ep4CgaFileName || ep5CgaFileName)) || hasArgument("forcevideo", args);
 }
 
 static void moveFiles(const char* src, const char* dst) {
@@ -357,7 +358,7 @@ static void moveFiles(const char* src, const char* dst) {
             strcat(srcBuffer, fileName);
             strcpy(dstBuffer, dst);
             strcat(dstBuffer, fileName);
-            rename(srcBuffer, dstBuffer);
+            farrename(srcBuffer, dstBuffer);
         }
         strcpy(fileName, FILE_NAME_CONFIG_PREFIX);
         strcat(fileName, FILE_NAME_SAVE_SUFFIXES[j]);
@@ -365,7 +366,7 @@ static void moveFiles(const char* src, const char* dst) {
         strcat(srcBuffer, fileName);
         strcpy(dstBuffer, dst);
         strcat(dstBuffer, fileName);
-        rename(srcBuffer, dstBuffer);
+        farrename(srcBuffer, dstBuffer);
     }
 }
 
@@ -842,14 +843,21 @@ static int getPressedMenuKey() {
 
 #ifndef LOW_MEMORY
 static void runMainExe(const char* path) {
-    unsigned short errorCode = spawnve(P_WAIT, path, (const char**)args, (const char**)environ);
+    unsigned short errorCode = spawnve(P_WAIT, path, args, (const char**)environ);
     if (errorCode == -1) {
         cleanup();
         fprintf(stderr, EXEC_ERROR_F, path, strerror(errno));
     } else {
         // Extend end B800 screen to also cover last line, check that we actually got an end screen
         if (*((char far *)(0xb8000000 + 2)) == '°') {
-            _hmemcpy((char far *)(0xb8000000 + 2 * 80 * 24), (char far *)0xb8000000, 160);
+            if (gameVersion == VERSION_14GT) {
+                for (int i = !strcmp(path, "KEEN4.EXE") ? 15 : 7; i <= 24; ++i) {
+                    _hmemcpy((char far *)(0xb8000000 + 2 * 80 * i), (char far *)0xb8000000, 160);
+                }
+            }
+            else {
+                _hmemcpy((char far *)(0xb8000000 + 2 * 80 * 24), (char far *)0xb8000000, 160);
+            }
             moveCaret(0, 24);
         }
         activeMenu = MENU_MAIN;
@@ -867,10 +875,10 @@ static void showText(const char* path, const char* title) {
 
 static void performModeSetup() {
     if (!directoryExists(DIRECTORY_NAME_EGASAVE)) {
-        mkdir(DIRECTORY_NAME_EGASAVE);
+        farmkdir(DIRECTORY_NAME_EGASAVE);
     }
     if (!directoryExists(DIRECTORY_NAME_CGASAVE)) {
-        mkdir(DIRECTORY_NAME_CGASAVE);
+        farmkdir(DIRECTORY_NAME_CGASAVE);
     }
 }
 
@@ -1089,7 +1097,7 @@ static bool handleInput() {
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, const char *argv[]) {
     #ifdef LOW_MEMORY
         if (argc < 2) {
             printf("Run KEENGG.BAT instead!\n");

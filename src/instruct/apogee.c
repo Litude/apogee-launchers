@@ -985,7 +985,7 @@ bool hasLicenseAgreement() {
         return true;
     }
     long vendorSize = fileSize(VENDOR_FILENAME);
-    if (vendorSize != -1 && (vendorSize != ID_VENDOR_LETTER_SIZE || checksum(VENDOR_FILENAME) != ID_VENDOR_LETTER_CSUM)) {
+    if (vendorSize != -1 && (vendorSize != ID_VENDOR_LETTER_SIZE || checksum(VENDOR_FILENAME) != ID_VENDOR_LETTER_CSUM) && !fileExists("PSP.DOC")) {
         return true;
     }
     return false;
